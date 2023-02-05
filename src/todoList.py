@@ -120,7 +120,7 @@ def create_todo_table(dynamodb):
         TableName=table_name,
         KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
         AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
-        ProvisionedThroughput={"ReadCapacityUnits": 1, 
+        ProvisionedThroughput={"ReadCapacityUnits": 1, \
                                "WriteCapacityUnits": 1},
     )
 
