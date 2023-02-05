@@ -98,14 +98,18 @@ def update_item(key, text, checked, dynamodb=None):
 
 def delete_item(key, dynamodb=None):
     table = get_table(dynamodb)
-
+    # delete the todo from the database
     try:
-        table.delete_item(Key={'id': key})
-    except ClientError as e:
-        print(f"Error deleting item: {e}")
-        return None
+        table.delete_item(
+            Key={
+                'id': key
+            }
+        )
 
-    return None
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+    else:
+        return
 
 
 def create_todo_table(dynamodb):
@@ -134,7 +138,7 @@ def create_todo_table(dynamodb):
 
     # Wait until the table exists.
     table.meta.client.get_waiter('table_exists').wait(TableName=tableName)
-    if (table.table_status != 'ACTIVE'):
-        raise AssertionError()
+if table.table_status != 'ACTIVE':
+    raise AssertionError(f"Table status is {table.table_status}")
 
-    return table
+return table
