@@ -32,7 +32,6 @@ def get_item(key, dynamodb=None):
         return None
 
 
-
 def get_items(dynamodb=None):
     table = get_table(dynamodb)
     # fetch todo from the database
