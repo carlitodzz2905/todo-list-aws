@@ -98,18 +98,14 @@ def update_item(key, text, checked, dynamodb=None):
 
 def delete_item(key, dynamodb=None):
     table = get_table(dynamodb)
-    # delete the todo from the database
-    try:
-        table.delete_item(
-            Key={
-                'id': key
-            }
-        )
 
+    try:
+        table.delete_item(Key={'id': key})
     except ClientError as e:
-        print(e.response['Error']['Message'])
-    else:
-        return
+        print(f"Error deleting item: {e}")
+        return None
+
+    return None
 
 
 def create_todo_table(dynamodb):
