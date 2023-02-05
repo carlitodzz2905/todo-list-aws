@@ -20,18 +20,17 @@ def get_table(dynamodb=None):
 def get_item(key, dynamodb=None):
     table = get_table(dynamodb)
     try:
-        result = table.get_item(
-            Key={
-                'id': key
-            }
-        )
-
+        result = table.get_item(Key={'id': key})
     except ClientError as e:
-        print(e.response['Error']['Message'])
+        print(f"Error: {e.response['Error']['Message']}")
+        return None
+    item = result.get('Item')
+    if item:
+        return item
     else:
-        print('Result getItem:'+str(result))
-        if 'Item' in result:
-            return result['Item']
+        print(f"No item found with key: {key}")
+        return None
+
 
 
 def get_items(dynamodb=None):
