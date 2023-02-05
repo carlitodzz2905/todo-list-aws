@@ -3,7 +3,6 @@ import boto3
 import time
 import uuid
 import json
-import functools
 from botocore.exceptions import ClientError
 
 
