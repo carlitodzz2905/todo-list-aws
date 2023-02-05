@@ -113,32 +113,36 @@ def delete_item(key, dynamodb=None):
 
 
 def create_todo_table(dynamodb):
-    # For unit testing
-    tableName = os.environ['DYNAMODB_TABLE']
-    print('Creating Table with name:' + tableName)
-    table = dynamodb.create_table(
-        TableName=tableName,
-        KeySchema=[
-            {
-                'AttributeName': 'id',
-                'KeyType': 'HASH'
-            }
-        ],
-        AttributeDefinitions=[
-            {
-                'AttributeName': 'id',
-                'AttributeType': 'S'
-            }
-        ],
-        ProvisionedThroughput={
-            'ReadCapacityUnits': 1,
-            'WriteCapacityUnits': 1
-        }
-    )
+    table_name = os.environ['DYNAMODB_TABLE']
+    print(f"Creating table with name: {table_name}")
 
-    # Wait until the table exists.
-    table.meta.client.get_waiter('table_exists').wait(TableName=tableName)
-    if (table.table_status != 'ACTIVE'):
-        raise AssertionError()
+    try:
+        table = dynamodb.create_table(
+            TableName=table_name,
+            KeySchema=[
+                {
+                    'AttributeName': 'id',
+                    'KeyType': 'HASH'
+                }
+            ],
+            AttributeDefinitions=[
+                {
+                    'AttributeName': 'id',
+                    'AttributeType': 'S'
+                }
+            ],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 1,
+                'WriteCapacityUnits': 1
+            }
+        )
+        table.meta.client.get_waiter("table_exists").wait(TableName=table_name)
+    except ClientError as e:
+        print(f"Error creating table: {e}")
+        return None
+
+    if table.table_status != "ACTIVE":
+        print(f"Table status is not ACTIVE: {table.table_status}")
+        return None
 
     return table
